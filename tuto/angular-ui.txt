@@ -1,0 +1,2 @@
+https://github.com/angular-ui/ui-router/tree/gh-pages/sample/app
+http://csharp-video-tutorials.blogspot.com/2015/11/angularjs-tutorial-for-beginners.html

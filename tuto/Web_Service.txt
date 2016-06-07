@@ -1,0 +1,187 @@
+
+<reference path="angular.min.js" />
+
+
+*******************************************************************
+JavaScriptSerializer js = new JavaScriptSerializer();
+            Context.Response.Write(js.Serialize(listEmployees));
+******************************************************************
+
+
+
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope, $http) {
+
+            $http.get("EmployeeService.asmx/GetAllEmployees")
+                 .then(function (response) {
+                     $scope.employees = response.data;
+                 });
+        });
+
+Step 8 : Add a new stylesheet to the project. Name it Styles.css. Copy and paste the following styles in it. 
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+Step 9 : Add an HTML page to the ASP.NET project. Copy and paste the following HTML and Angular code 
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees">
+                    <td>{{employee.id}}</td>
+                    <td>{{employee.name}}</td>
+                    <td>{{employee.gender}}</td>
+                    <td>{{employee.salary}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+In Angular there are several built in services. $http service is one of them. In this video, we will discuss another built in service, $log. It is also possible to create our own custom services in Angular. 
+
+At this point several questions come to our mind
+What are services in Angular
+When should we be creating services in Angular
+How to create our own custom Angular services
+Where do they fit, in an angular application architecture
+What are the benefits of using services
+I will answer all these questions in a later video. The reason for postponing this discussion, is that, it is easier to understand the concept of Angular services and the benefits they provide, once we understand how to use use 1 or 2 built in angular services. 
+
+So, let's start our discussion with $http service. 
+
+$http service in Angular is used to make HTTP requests to remote server 
+
+$http service is a function that has a single input parameter i.e a configuration object. 
+
+Example : The following example issues a GET request to the specified URL 
+
+$http({
+    method: 'GET',
+    url: 'EmployeeService.asmx/GetAllEmployees'
+});
+
+In the example above we are only using 2 properties of the configuration object. Check the link below for the complete list of properties supported by the configuration object
+https://docs.angularjs.org/api/ng/service/$http#usage
+
+Shortcut methods like get, post, put, delete etc are also available to be used with $http service
+
+Example : Using the short cut method get()
+$http.get('EmployeeService.asmx/GetAllEmployees')
+
+$http service returns a promise object. This means the functions are executed asynchronously and the data that these functions return may not be available immediately. Because of this reason you cannot use the return value of the $http service as shown below.
+
+$scope.employees = $http.get('EmployeeService.asmx/GetAllEmployees');
+
+Instead you will use the then() method. The successCallback function that is passed as the parameter to the then function is called when the request completes. The successCallback function receives a single object that contains several properties. Use the data property of the object to retrieve the data received from the server.
+
+$scope.employees = $http.get('EmployeeService.asmx/GetAllEmployees')
+            .then(function (response) {
+                $scope.employees = response.data;
+            });
+
+You can use the $log service to log the response object to the console to inspect all of it's properties 
+
+$scope.employees = $http.get('EmployeeService.asmx/GetAllEmployees')
+                        .then(function (response) {
+                            $scope.employees = response.data;
+                            $log.info(response);
+                        });
+
+If there is an error processing the request, the errorCallback function is called. The errorCallback function is passed as the second parameter to the then() function. The errorCallback function receives a single object that contains several properties. Use the data or statusText properties of the returned object to find the reasons for the failure.
+
+$scope.employees = $http.get('EmployeeService.asmx/GetAllEmployee')
+                        .then(function (response) {
+                            $scope.employees = response.data;
+                        }, function (reason) {
+                            $scope.error = reason.data;
+                        });
+
+You can use the $log service to log the response object to the console to inspect all of it's properties 
+
+$scope.employees = $http.get('EmployeeService.asmx/GetAllEmployee')
+                        .then(function (response) {
+                            $scope.employees = response.data;
+                        }, function (reason) {
+                            $scope.error = reason.data;
+                            $log.info(reason);
+                        });
+
+You can also create separate functions and associate them as successCallback and errorCallback functions
+
+var successCallBack = function (response) {
+    $scope.employees = response.data;
+};
+
+var errorCallBack = function (reason) {
+    $scope.error = reason.data;
+}
+
+$scope.employees = $http.get('EmployeeService.asmx/GetAllEmployees')
+                        .then(successCallBack, errorCallBack);
+
+Default Transformations provided by Angular's http service
+If the data property of the request configuration object contains a JavaScript object, it is automatically converted into JSON object
+If JSON response is detected, it is automatically converted into a JavaScript object
+
+
+
+
+
+
+
+

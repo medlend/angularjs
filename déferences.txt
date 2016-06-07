@@ -1,0 +1,10 @@
+using web standards (Web Components)
+no two way data binding
+typescript will be the default language
+improved dependency injection
+no controllers we now have components
+
+
+
+
+

@@ -1,0 +1,117 @@
+creating the angular layout template. This is continuation to Part 23, please watch Part 23 from AngularJS tutorial before proceeding. 
+
+
+
+The layout page for our example should be as shown below. 
+Angular layout template 
+
+Here are the steps
+Step 1
+======
+ : Copy and paste the following HTML in the body section of the page. 
+<table style="font-family: Arial">
+    <tr>
+        <td colspan="2" class="header">
+            <h1>
+                WebSite Header
+            </h1>
+        </td>
+    </tr>
+    <tr>
+        <td class="leftMenu">
+            <a href="#/home">Home</a>
+            <a href="#/courses">Courses</a>
+            <a href="#/students">Students</a>
+        </td>
+        <td class="mainContent">
+            <ng-view></ng-view>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="footer">
+            <b>Website Footer</b>
+        </td>
+    </tr>
+</table>
+
+Please note : 
+1. The partial templates (home.html, courses.html & students.html) will be injected into the location where we have ng-view directive. 
+2. For linking to partial templates we are using # symbol in the href attribute. This tells the browser not to navigate away from index.html. In a later video we will discuss how to get rid of the # symbol. 
+
+At this point, if you navigate to index.html, the page looks as shown below. This is because we do not have the styles applied yet. 
+angular layout template without styles 
+
+Step 2
+=========
+
+: Add a stylesheet to your project. Name it styles.css. Copy and paste the following. 
+
+.header {
+    width: 800px;
+    height: 80px;
+    text-align: center;
+    background-color: #BDBDBD;
+}
+
+.footer {
+    background-color: #BDBDBD;
+    text-align: center;
+}
+
+.leftMenu {
+    height: 500px;
+    background-color: #D8D8D8;
+    width: 150px;
+}
+
+.mainContent {
+    height: 500px;
+    background-color: #E6E6E6;
+    width: 650px;
+}
+
+a{
+    display:block;
+    padding:5px
+}
+
+Step 3
+==========
+ : Finally add a reference to styles.css in index.html page. At this point the HTML in the layout page (index.html) should be as shown below. 
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="Demo">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/angular-route.min.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body>
+    <table style="font-family: Arial">
+        <tr>
+            <td colspan="2" class="header">
+                <h1>
+                    WebSite Header
+                </h1>
+            </td>
+        </tr>
+        <tr>
+            <td class="leftMenu">
+                <a href="#/home">Home</a>
+                <a href="#/courses">Courses</a>
+                <a href="#/students">Students</a>
+            </td>
+            <td class="mainContent">
+                <ng-view></ng-view>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="footer">
+                <b>Website Footer</b>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

@@ -1,0 +1,821 @@
+
+Filters in angular can do 3 different things
+1. Format data
+2. Sort data
+3. Filter data 
+
+
+Format data
+************
+
+Syntax : {{ expression | filterName:parameter }}
+
+Angular filters for formatting data 
+''''''''''''''''''''''''''''''''''''
+
+lowercase	Formats all characters to lowercase
+uppercase	Formats all characters to uppercase
+number		Formats a number as text. Includes comma as thousands separator and the number of decimal places can be specified
+currency	Formats a number as a currency. $ is default. Custom currency and decimal places can be specified
+date		Formats date to a string based on the requested format
+
+limitTo filter : Can be used to limit the number of rows or characters in a string.
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Syntax : {{ expression | limitTo : limit : begin}}
+
+
+===> Script.js
+============
+
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                {
+                    name: "Ben", dateOfBirth: new Date("November 23, 1980"),
+                    gender: "Male", salary: 55000.788
+                },
+                {
+                    name: "Sara", dateOfBirth: new Date("May 05, 1970"),
+                    gender: "Female", salary: 68000
+                },
+                {
+                    name: "Mark", dateOfBirth: new Date("August 15, 1974"),
+                    gender: "Male", salary: 57000
+                },
+                {
+                    name: "Pam", dateOfBirth: new Date("October 27, 1979"),
+                    gender: "Female", salary: 53000
+                },
+                {
+                    name: "Todd", dateOfBirth: new Date("December 30, 1983"),
+                    gender: "Male", salary: 60000
+                }
+            ];
+
+            $scope.employees = employees;
+            $scope.rowCount = 3;
+        });
+
+
+===> HtmlPage1.html 
+==================
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        Rows to display : <input type="number" step="1"
+                                 ng-model="rowCount" max="5" min="0" />
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
+                    <th>Salary (number filter)</th>
+                    <th>Salary (currency filter)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees | limitTo:rowCount">
+                    <td> {{ employee.name | uppercase }} </td>
+                    <td> {{ employee.dateOfBirth | date:"dd/MM/yyyy" }} </td>
+                    <td> {{ employee.gender }} </td>
+                    <td> {{ employee.salary | number:2 }} </td>
+                    <td> {{ employee.salary | currency : "£" : 1 }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+
+===> Styles.css 
+================
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+
+
+Sorting data in AngularJS
+*************************
+
+
+To sort the data in Angular
+1. Use orderBy filter
+    {{ orderBy_expression | orderBy : expression : reverse}}
+    Example : ng-repeat="employee in employees | orderBy:'salary':false"
+2. To sort in ascending order, set reverse to false
+3. To sort in descending order, set reverse to true
+4. You can also use + and - to sort in ascending and descending order respectively
+     Example : ng-repeat="employee in employees | orderBy:'+salary'"
+
+
+===> Script.js
+================
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                {
+                    name: "Ben", dateOfBirth: new Date("November 23, 1980"),
+                    gender: "Male", salary: 55000
+                },
+                {
+                    name: "Sara", dateOfBirth: new Date("May 05, 1970"),
+                    gender: "Female", salary: 68000
+                },
+                {
+                    name: "Mark", dateOfBirth: new Date("August 15, 1974"),
+                    gender: "Male", salary: 57000
+                },
+                {
+                    name: "Pam", dateOfBirth: new Date("October 27, 1979"),
+                    gender: "Female", salary: 53000
+                },
+                {
+                    name: "Todd", dateOfBirth: new Date("December 30, 1983"),
+                    gender: "Male", salary: 60000
+                }
+            ];
+
+            $scope.employees = employees;
+            $scope.sortColumn = "name";
+
+        });
+
+
+===> HtmlPage1.html
+===================
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        Sort By :
+        <select ng-model="sortColumn">
+            <option value="name">Name ASC</option>
+            <option value="+dateOfBirth">Date of Birth ASC</option>
+            <option value="+gender">Gender ASC</option>
+            <option value="-salary">Salary DESC</option>
+        </select>
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees | orderBy:sortColumn">
+                    <td>
+                        {{ employee.name }}
+                    </td>
+                    <td>
+                        {{ employee.dateOfBirth | date:"dd/MM/yyyy" }}
+                    </td>
+                    <td>
+                        {{ employee.gender }}
+                    </td>
+                    <td>
+                        {{ employee.salary  }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+
+===> Styles.css
+=================
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+
+
+
+sort rows by table header
+------------------------
+
+Here is what we want to do
+1. The data should be sorted when the table column header is clicked
+2. The user should be able to sort in both the directions - ascending and descending. Clicking on the column for the first time should sort the data in ascending order. Clicking on the same column again should sort in descending order.
+3. An icon should be displayed next to the column showing the sort column and direction 
+
+===> Script.js
+=============
+
+ : The controller function in the script does the following
+Sets up the model 
+sortColumn and reverseSort properties are attached to the $scope object. These 2 properties are used to control the column by which the data should be sorted and the sort direction.
+sortColumn is set to name and reverseSort is set to false. This will ensure that when the form is initially loaded, the table data will be sorted by name column in ascending order.
+Depending on the column header the user has clicked, sortData() function sets the sortColumn and reverseSort property values. 
+Based on the sort column and the sort direction, getSortClass() function returns the CSS class name to return. The CSS class controls the sort icon that will be displayed next to the sort column.
+
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                {
+                    name: "Ben", dateOfBirth: new Date("November 23, 1980"),
+                    gender: "Male", salary: 55000
+                },
+                {
+                    name: "Sara", dateOfBirth: new Date("May 05, 1970"),
+                    gender: "Female", salary: 68000
+                },
+                {
+                    name: "Mark", dateOfBirth: new Date("August 15, 1974"),
+                    gender: "Male", salary: 57000
+                },
+                {
+                    name: "Pam", dateOfBirth: new Date("October 27, 1979"),
+                    gender: "Female", salary: 53000
+                },
+                {
+                    name: "Todd", dateOfBirth: new Date("December 30, 1983"),
+                    gender: "Male", salary: 60000
+                }
+            ];
+
+            $scope.employees = employees;
+            $scope.sortColumn = "name";
+            $scope.reverseSort = false;
+
+            $scope.sortData = function (column) {
+                $scope.reverseSort = ($scope.sortColumn == column) ?
+                    !$scope.reverseSort : false;
+                $scope.sortColumn = column;
+            }
+
+            $scope.getSortClass = function (column) {
+
+                if ($scope.sortColumn == column) {
+                    return $scope.reverseSort
+                      ? 'arrow-down'
+                      : 'arrow-up';
+                }
+
+                return '';
+            }
+        });
+
+
+===> HtmlPage1.html
+===================
+
+sortData() function is called when any table header is clicked, passing the name of the column by which the data should be sorted. The div element's, ng-class directive calls getSortClass() function, which returns the CSS class to be applied. The CSS displays the UP or DOWN arrow depending on the sort direction. Finally, with the orderBy filter sortColumn and reverseSort properties of the $scope object are used to control the column by which the data should be sorted and the sort direction. 
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        <table>
+            <thead>
+                <tr>
+                    <th ng-click="sortData('name')">
+                        Name <div ng-class="getSortClass('name')"></div>
+                    </th>
+                    <th ng-click="sortData('dateOfBirth')">
+                        Date of Birth <div ng-class="getSortClass('dateOfBirth')"></div>
+                    </th>
+                    <th ng-click="sortData('gender')">
+                        Gender <div ng-class="getSortClass('gender')"></div>
+                    </th>
+                    <th ng-click="sortData('salary')">
+                        Salary <div ng-class="getSortClass('salary')"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees | orderBy:sortColumn:reverseSort">
+                    <td> {{ employee.name }} </td>
+                    <td> {{ employee.dateOfBirth | date:"dd/MM/yyyy" }} </td>
+                    <td> {{ employee.gender }} </td>
+                    <td> {{ employee.salary  }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+===>Styles.css
+==============
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    /*cursor property displays hand symbol
+        when hovered over the th element*/
+    cursor: pointer;
+}
+
+/*This class displays the UP arrow*/
+.arrow-up {
+     width: 0;
+     height: 0;
+     border-left: 5px solid transparent;
+     border-right: 5px solid transparent;
+     border-bottom: 10px solid black;
+     display:inline-block;
+}
+
+/*This class displays the DOWN arrow*/
+.arrow-down {
+     width: 0;
+     height: 0;
+     border-left: 5px solid transparent;
+     border-right: 5px solid transparent;
+     border-top: 10px solid black;
+     display:inline-block;
+}
+
+
+
+Search filter in AngularJS
+***************************
+
+
+
+As we type in the search textbox, all the columns in the table must be searched and only the matching rows should be displayed.  
+
+===> Script.js
+==================
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                { name: "Ben", gender: "Male", salary: 55000, city: "London" },
+                { name: "Sara", gender: "Female", salary: 68000, city: "Chennai" },
+                { name: "Mark", gender: "Male", salary: 57000, city: "London" },
+                { name: "Pam", gender: "Female", salary: 53000, city: "Chennai" },
+                { name: "Todd", gender: "Male", salary: 60000, city: "London" },
+            ];
+
+            $scope.employees = employees;
+        });
+
+===> HtmlPage1.html
+====================
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        Search : <input type="text" placeholder="Search employees"
+                        ng-model="searchText" />
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Salary</th>
+                    <th>City</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees | filter:searchText">
+                    <td> {{ employee.name }} </td>
+                    <td> {{ employee.gender }} </td>
+                    <td> {{ employee.salary  }} </td>
+                    <td> {{ employee.city  }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+===> Styles.css
+==============
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+At the moment, the search is being done across all columns. If you want to search only one specific column, then change ng-model directive value on the search textbox as shown below. With this change only city column is searched.
+
+<input type="text" ng-model="searchText.city" placeholder="Search employees" />
+
+
+filter by multiple properties
+------------------------------
+
+in the example below, we are using multiple search textboxes. As you type in the "Search name" textbox, only the name property is searched and matching elements are displayed. Similarly, as you type in the "Search city" textbox, only the city property is searched and the matching elements are displayed. When the "exact match" checkbox is checked, an exact match search is performed. 
+
+Angularjs filter example 
+
+===> Script.js :
+================
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                { name: "Ben", gender: "Male", salary: 55000, city: "London" },
+                { name: "Sara", gender: "Female", salary: 68000, city: "Chennai" },
+                { name: "Mark", gender: "Male", salary: 57000, city: "London" },
+                { name: "Pam", gender: "Female", salary: 53000, city: "Chennai" },
+                { name: "Todd", gender: "Male", salary: 60000, city: "London" },
+            ];
+
+            $scope.employees = employees;
+        });
+
+===>HtmlPage1.html : 
+====================
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        <input type="text" placeholder="Search name" ng-model="searchText.name" />
+        <input type="text" placeholder="Search city" ng-model="searchText.city" />
+        <input type="checkbox" ng-model="exactMatch" /> Exact Match
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Salary</th>
+                    <th>City</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees | filter: searchText : exactMatch">
+                    <td> {{ employee.name }} </td>
+                    <td> {{ employee.gender }} </td>
+                    <td> {{ employee.salary  }} </td>
+                    <td> {{ employee.city  }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+===>Styles.css 
+===============
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+
+
+The following example has a single search textbox, and is used to search multiple properties - name and city. 
+--------------------------------------------------------------------------------------------------------------
+
+
+Angularjs filter by multiple properties 
+
+===>Script.js 
+===============
+ 
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                { name: "Ben", gender: "Male", salary: 55000, city: "London" },
+                { name: "Sara", gender: "Female", salary: 68000, city: "Chennai" },
+                { name: "Mark", gender: "Male", salary: 57000, city: "London" },
+                { name: "Pam", gender: "Female", salary: 53000, city: "Chennai" },
+                { name: "Todd", gender: "Male", salary: 60000, city: "London" },
+            ];
+
+            $scope.employees = employees;
+
+            $scope.search = function (item) {
+                if ($scope.searchText == undefined) {
+                    return true;
+                }
+                else {
+                    if (item.city.toLowerCase()
+                                 .indexOf($scope.searchText.toLowerCase()) != -1 ||
+                        item.name.toLowerCase()
+                                 .indexOf($scope.searchText.toLowerCase()) != -1) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+        });
+
+===> HtmlPage1.html 
+===================
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        Search : <input type="text" placeholder="Search city & name"
+                        ng-model="searchText" />
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Salary</th>
+                    <th>City</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees | filter: search">
+                    <td> {{ employee.name }} </td>
+                    <td> {{ employee.gender }} </td>
+                    <td> {{ employee.salary  }} </td>
+                    <td> {{ employee.city  }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+
+Custom filter in AngularJS
+------------------------
+
+1. Is a function that returns a function
+2. Use the filter function to create a custom filter 
+
+Let us understand creating custom filter with an example. 
+Create a custom filter in AngularJS 
+
+==>Script.js :
+==============
+
+ In the example below we are using the filter function to create a custom filter that converts integer values 1, 2, 3 to Male, Female and Not disclosed respectively. gender is the name of the filter. With in the filter function we have an anonymous function that returns another anonymous function. The input parameter for the inner anonynous function is the gender integer value. The switch statement in the function returns the corresponding string value. 
+
+var app = angular
+        .module("myModule", [])
+        .filter("gender", function () {
+            return function (gender) {
+                switch (gender) {
+                    case 1:
+                        return "Male";
+                    case 2:
+                        return "Female";
+                    case 3:
+                        return "Not disclosed";
+                }
+            }
+        })
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                { name: "Ben", gender: 1, salary: 55000 },
+                { name: "Sara", gender: 2, salary: 68000 },
+                { name: "Mark", gender: 1, salary: 57000 },
+                { name: "Pam", gender: 2, salary: 53000 },
+                { name: "Todd", gender: 3, salary: 60000 }
+            ];
+
+            $scope.employees = employees;
+        });
+
+===>HtmlPage1.html
+===================
+
+ : In the view, we use the custom gender filter like any other angular built-in filter with a pipe character.
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="employee in employees">
+                    <td> {{ employee.name }} </td>
+                    <td> {{ employee.gender | gender}} </td>
+                    <td> {{ employee.salary  }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
++++++++++++++++++++++
+
+In the above example we have the custom filter in Script.js file. In a real world application you may the custom filters in a separate script file (Filters.js for example). To do this reference the module object and use the filter function.
+
+===>Filter.js
+================
+
+
+ : The custom filter is moved to a separate file
+
+/// <reference path="Script.js" />
+
+app.filter("gender", function () {
+    return function (gender) {
+        switch (gender) {
+            case 1:
+                return "Male";
+            case 2:
+                return "Female";
+            case 3:
+                return "Not disclosed";
+        }
+    }
+});
+
+===> Script.js
+=================
+
+ : After moving the filter function to a separate Filters.js file, the Script.js file will now look as shown below.
+
+/// <reference path="angular.min.js" />
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+
+            var employees = [
+                { name: "Ben", gender: 1, salary: 55000 },
+                { name: "Sara", gender: 2, salary: 68000 },
+                { name: "Mark", gender: 1, salary: 57000 },
+                { name: "Pam", gender: 2, salary: 53000 },
+                { name: "Todd", gender: 3, salary: 60000 }
+            ];
+
+            $scope.employees = employees;
+        });
+
+===>HtmlPage1.html
+==================
+
+ : The only change required in the view is to reference the Filters.js file
+<script src="Scripts/Filters.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

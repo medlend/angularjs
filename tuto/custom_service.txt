@@ -1,0 +1,110 @@
+custom service in AngularJS.
+***************************
+
+Let us understand this with an example. 
+
+
+
+Whenever the case changes from lower to upper, a single space character should be inserted. This means the string "AngularVideoTutorial" should be converted to "Angular Video Tutorial". 
+
+create custom service in angularjs 
+
+Let us first see, how to achieve this without using a custom service. 
+
+HtmlPage1.html :  
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/angular.js"></script>
+    <script src="Scripts/Script.js"></script>
+    <link href="Styles.css" rel="stylesheet" />
+</head>
+<body ng-app="myModule">
+    <div ng-controller="myController">
+        <table>
+            <tr>
+                <td>Your String</td>
+                <td><input type="text" ng-model="input" /> </td>
+            </tr>
+            <tr>
+                <td>Result</td>
+                <td><input type="text" ng-model="output" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="button" ng-click="transformString(input)"
+                           value="Process String" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+
+Script.js : Notice, all the logic to insert a space when the case changes is in the controller. There are 2 problems with this
+1. The controller is getting complex
+2. This logic cannot be reused in another controller. If you have to use this logic in another controller, we will have to duplicate this same code with in that controller. 
+
+When we use our own custom service to encapsulate this logic, both of these problems go away. The custom service can be injected into any controller where you need this logic. 
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope) {
+            $scope.transformString = function (input) {
+                if (!input)
+                    return input;
+
+                var output = "";
+
+                for (var i = 0; i < input.length; i++) {
+                    if (i > 0 && input[i] == input[i].toUpperCase()) {
+                        output = output + " ";
+                    }
+
+                    output = output + input[i];
+                }
+
+                $scope.output = output;
+            };
+        });
+
+Now let's create a custom service. Here are the steps
+1. Add a JavaScript file to the Scripts folder in the project. Name it stringService.js.
+2. Copy and paste the following code. Notice we are using the factory method to create and register the service with Angular. 
+
+app.factory('stringService', function () {
+    return {
+        processString: function (input) {
+            if (!input)
+                return input;
+
+            var output = "";
+
+            for (var i = 0; i < input.length; i++) {
+                if (i > 0 && input[i] == input[i].toUpperCase()) {
+                    output = output + " ";
+                }
+
+                output = output + input[i];
+            }
+
+            return output;
+        }
+    };
+});
+
+3. Copy and paste the following code in Script.js. Notice that we have injected stringService into the controller function. 
+
+var app = angular
+        .module("myModule", [])
+        .controller("myController", function ($scope, stringService) {
+            $scope.transformString = function (input) {
+                $scope.output = stringService.processString(input);
+            };
+        });
+
+4. On HtmlPage1.html, only one change is required and that is to reference the stringService.js script file
+<script src="Scripts/stringService.js"></script>

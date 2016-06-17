@@ -1,0 +1,23 @@
+git init
+   34  git status
+   35  git add fichier*
+   36  git status
+ 
+   39  git rm --cached fichier2
+   40  git status
+   41  git commit
+   42  git config --global user.email "lendmed@gmail.com"
+   43* git config --global user.pa "medlend"
+  
+   45  git commit -m "ujyyyyyyyyyyyyyyyy"
+   46  git remote add origin https://github.com/medlend/testgit.git
+   47  git push
+   48  git status
+   49  git log
+   51  git add fichier2
+   52  git status
+   53  git commit -m "fichier 2 commit"
+   54  git push origin master
+   55  git pull origin master
+   59  git push origin master
+
